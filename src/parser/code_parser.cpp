@@ -9,6 +9,17 @@
 
 regex funcReg(R"([A-Za-z]*\s\s*[A-Za-z][A-Za-z]*\s*\()");
 regex callFuncReg(R"([A-Za-z][A-Za-z]*\s*\(.*\))");
+regex createVariableReg(R"([A-Za-z][A-Za-z]*\s\s*[A-Za-z][A-Za-z]*\s*=\s*.*)");
+regex updateVariableReg(R"([A-Za-z][A-Za-z]*\s*=\s*.*)");
+
+Type getType(string text) {
+    if (text == "void") return Type(VOID);
+    else if (text == "int") return Type(INT);
+    else if (text == "float") return Type(FLOAT);
+    else if (text == "char") return Type(CHAR);
+    else if (text == "bool") return Type(BOOL);
+    else return Type(text);
+}
 
 tuple<int, vector<Parameter>> parseParameter(string body, int pointer) {
     vector<Parameter> parameters;
@@ -49,10 +60,23 @@ tuple<int, vector<Code>> parseCodeBlock(string body, int pointer) {
                     }
 
                     Code code(func, args);
+                    codes.emplace_back(code);
+                } else if (regex_match(text, createVariableReg)) {
+                    vector<string> splitted = split(text, ' ');
+                    string type = splitted[0];
+                    string name = splitted[1];
+                    string value = splitted[3];
 
+                    Code code(getType(type), name, value);
+                    codes.emplace_back(code);
+                } else if (regex_match(text, updateVariableReg)) {
+                    vector<string> splitted = split(text, ' ');
+                    string name = splitted[0];
+                    string value = splitted[2];
+
+                    Code code(name, value);
                     codes.emplace_back(code);
                 }
-
                 text = "";
             }
         }
@@ -74,12 +98,7 @@ DotCrop parse(string body) {
 
         if (regex_match(text, funcReg)) {
             vector<string> splitted = split(text, ' ');
-            Type returnType(VariableType::VOID);
-            if (splitted[0] == "void") returnType = Type(VariableType::VOID);
-            else if (splitted[0] == "int") returnType = Type(VariableType::INT);
-            else if (splitted[0] == "float") returnType = Type(VariableType::FLOAT);
-            else if (splitted[0] == "char") returnType = Type(VariableType::CHAR);
-            else returnType = Type(splitted[0]);
+            Type returnType = getType(splitted[0]);
 
             string functionName = splitted[1].substr(0, splitted[1].size() - 1);
 

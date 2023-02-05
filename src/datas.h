@@ -18,11 +18,13 @@ typedef struct {
 } Variable;
 
 enum VariableType {
-    VOID, INT, FLOAT, CHAR, OBJECT
+    VOID, INT, FLOAT, CHAR, BOOL, OBJECT
 };
 
 class Type {
 public:
+    explicit Type() : type(VOID) {}
+
     explicit Type(VariableType type) : type(type) {}
 
     explicit Type(string objName) : objName(std::move(objName)) { type = OBJECT; }
@@ -33,16 +35,30 @@ public:
 
 enum CodeType {
     EXECUTE_FUNCTION,
+    CREATE_VARIABLE,
+    UPDATE_VARIABLE,
 };
 
 class Code {
 public:
-    Code(string functionName, const vector<any> &arguments) : functionName(std::move(functionName)),
-                                                              arguments(arguments) { type = EXECUTE_FUNCTION; }
+    Code(string functionName, const vector<any> &functionArguments) : functionName(std::move(functionName)),
+                                                                      functionArguments(
+                                                                              functionArguments) { type = EXECUTE_FUNCTION; }
+
+    Code(Type variableType, string variableName, any variableData) : variableType(std::move(variableType)),
+                                                                     variableName(std::move(variableName)),
+                                                                     variableData(std::move(
+                                                                             variableData)) { type = CREATE_VARIABLE; }
+
+    Code(string variableName, any variableData) : variableName(std::move(variableName)),
+                                                                variableData(std::move(variableData)) { type = UPDATE_VARIABLE; }
 
     CodeType type;
-    vector<any> arguments;
     string functionName;
+    vector<any> functionArguments;
+    Type variableType;
+    string variableName;
+    any variableData;
 };
 
 class Function {

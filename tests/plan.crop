@@ -1,6 +1,6 @@
 package wtf.iamsihu.croptest
 
-fun main() {
+void main() {
     Person sihu = Person("김시후", 16)
     sihu.pleaseintroduceyourself()
 }
@@ -10,12 +10,12 @@ class Person(String name, Int age) {
         this(name, 0)
     }
 
-    fun pleaseintroduceyourself() {
+    void pleaseintroduceyourself() {
         println("My name is $name")
         println("And I am $age years old")
     }
 
-    fun oneyearslater() {
+    void oneyearslater() {
         age++
     }
 
