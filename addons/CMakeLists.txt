@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.16)
 project(crop VERSION 0.1.0)
 
-add_executable(cropc main.cpp)
+include_directories(include/)
 
-add_subdirectory(addons)
+add_library(addon_interpret SHARED interpretaddon.cpp)
 
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})

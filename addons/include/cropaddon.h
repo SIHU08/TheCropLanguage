@@ -1,0 +1,1 @@
+#define CROP_COMPILE_CODE extern "C" void compileCode
