@@ -12,10 +12,10 @@ typedef struct {
     vector<string> name;
 } Parameter;
 
-typedef struct {
+class Variable {
     string name;
     any value;
-} Variable;
+};
 
 enum VariableType {
     VOID, INT, FLOAT, CHAR, BOOL, OBJECT

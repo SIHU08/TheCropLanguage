@@ -1,0 +1,9 @@
+void main() {
+    int i = 123
+    int j = 456
+    char c = 'a'
+
+    println(i)
+    println(j)
+    println(c)
+}
