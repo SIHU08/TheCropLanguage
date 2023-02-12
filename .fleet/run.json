@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "type": "command",
+            "name": "CMake init",
+            "program": "cmake",
+            "args": ["--build", "."],
+        },
+        {
+            "type": "command",
+            "name": "Build Crop Compiler",
+            "program": "cmake",
+            "args": ["--build", "."],
+        },
+        {
+            "type": "command",
+            "name": "Test Crop Compiler",
+            "dependsOn": ["CMake init", "Build Crop Compiler"],
+            "program": "./cropc",
+            "args": ["tests/variable_test.crop"],
+        },
+    ]
+}
