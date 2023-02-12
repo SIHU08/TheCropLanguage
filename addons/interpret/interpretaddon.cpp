@@ -8,15 +8,10 @@
 
 using namespace std;
 
-CROP_COMPILE_CODE(CropProject project) {
-    Function const *mainFunction;
-    for (const auto &item: project.mainFile.functions) {
-        if (item.name == "main") mainFunction = &item;
-    }
-
+void callFunction(Function function) {
     map<string, any> variableMap;
 
-    for (const auto &item: mainFunction->codes) {
+    for (const auto &item: function.codes) {
         if (item.type == EXECUTE_FUNCTION) {
             if (item.functionName == "println") {
                 auto arg = any_cast<string>(item.functionArguments[0]);
@@ -38,4 +33,13 @@ CROP_COMPILE_CODE(CropProject project) {
             variableMap[item.variableName] = item.variableData;
         }
     }
+}
+
+CROP_COMPILE_CODE(CropProject project) {
+    Function const *mainFunction;
+    for (const auto &item: project.mainFile.functions) {
+        if (item.name == "main") mainFunction = &item;
+    }
+
+    callFunction(*mainFunction);
 }
