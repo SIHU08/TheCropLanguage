@@ -41,8 +41,9 @@ any castValue(Type type, string v) {
   case BOOL:
     return v == "true" ? true : false;
   case OBJECT:
-    return nullptr; //TODO
+    return nullptr; // TODO
   }
+  return nullptr;
 }
 
 tuple<int, vector<Parameter>> parseParameter(string body, int pointer) {

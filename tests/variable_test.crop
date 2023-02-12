@@ -8,7 +8,4 @@ void main() {
     println(b)
     println(c)
     println(d)
-    println("-CALC-")
-    println(3 + 12)
-    println(itisnotVariable)
 }
