@@ -1,9 +1,14 @@
 void main() {
-    int i = 123
-    int j = 456
+    int a = 123
+    float b = 1.23
     char c = 'a'
+    bool d = true
 
-    println(i)
-    println(j)
+    println(a)
+    println(b)
     println(c)
+    println(d)
+    println("-CALC-")
+    println(3 + 12)
+    println(itisnotVariable)
 }

@@ -5,6 +5,8 @@
 
 #include "cropaddon.h"
 #include "datas.h"
+#include "variables.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -20,10 +22,11 @@ void callFunction(Function function) {
           text = arg.substr(1, arg.size() - 2);
         } else {
           if (!variableMap.count(arg)) {
-            cerr << "Variable " << text << " NOT found.";
-            return;
+            cerr << "Variable '" << arg << "' NOT found." << "\n";
+            continue;
           }
-          text = any_cast<string>(variableMap[arg].value);
+
+          text = to_string(getVariableValue(variableMap[arg]));
         }
         cout << text << "\n";
       }

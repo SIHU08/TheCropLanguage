@@ -1,5 +1,3 @@
-
-
 #include "../code/datas.h"
 
 #ifdef _WIN32
