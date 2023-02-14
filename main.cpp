@@ -3,6 +3,7 @@
 #include <string>
 
 #include "src/parser/code_parser.cpp"
+#include "src/parser/project_parser.cpp"
 #include "src/compileraddon/addon_loader.cpp"
 
 using namespace std;
@@ -20,8 +21,13 @@ int main(int argc, char **argv) {
         openFile.close();
     }
 
-    DotCrop mainDotCrop = parse(code);
-    CropProject project = CropProject(mainDotCrop, vector<DotCrop>());
+    ProjectConfig projectConfig = parseProjectConfig(code);
 
-    doCompile(project);
+    vector<DotCrop> sources;
+    for (string filePath : projectConfig.files) {
+        sources.push_back(parse(filePath));
+    }
+    CropProject project = CropProject(parse(projectConfig.mainFile), sources);
+
+    doCompile(project, projectConfig.addonPath);
 }

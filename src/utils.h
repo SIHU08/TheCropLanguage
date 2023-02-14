@@ -1,5 +1,9 @@
+#ifndef CROP_UTILITY_H
+#define CROP_UTILITY_H
+
 #include <vector>
 #include <sstream>
+#include <regex>
 
 using namespace std;
 
@@ -37,3 +41,5 @@ string rtrim(const string &s) {
 string trim(const string &s) {
     return rtrim(ltrim(s));
 }
+
+#endif // CROP_UTILITY_H

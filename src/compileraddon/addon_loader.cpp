@@ -1,3 +1,5 @@
+#include <string>
+
 #include "../code/datas.h"
 
 #ifdef _WIN32
@@ -11,9 +13,9 @@ typedef void (*CropAddon)(CropProject);
 
 #endif
 
-void doCompile(CropProject project) {
+void doCompile(CropProject project, string addonPath) {
 #ifdef _WIN32
-    HINSTANCE hinstLib = LoadLibrary("libinterpretaddon.dll");
+    HINSTANCE hinstLib = LoadLibrary(addonPath + ".dll");
     if (!hinstLib) return;
     auto addon = (CropAddon) GetProcAddress(hinstLib, "compileCode");
 
@@ -24,7 +26,7 @@ void doCompile(CropProject project) {
 #elif __linux__
     void *handle;
     CropAddon func;
-    handle = dlopen("addons/libaddon_interpret.so", RTLD_NOW | RTLD_GLOBAL);
+    handle = dlopen((addonPath + ".so").c_str(), RTLD_NOW | RTLD_GLOBAL);
     if (handle == nullptr) {
         fprintf(stderr, "Unable to open lib: %s\n", dlerror());
         return;

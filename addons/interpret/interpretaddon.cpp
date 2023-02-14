@@ -13,7 +13,7 @@ using namespace std;
 
 template <typename T>
 T calcExpression(map<string, Variable> variableMap,
-                 const string &expression_string) {
+                 string expression_string) { // TODO
   typedef exprtk::symbol_table<T> symbol_table_t;
   typedef exprtk::expression<T> expression_t;
   typedef exprtk::parser<T> parser_t;
@@ -26,7 +26,7 @@ T calcExpression(map<string, Variable> variableMap,
   expression_t expression;
   expression.register_symbol_table(symbol_table);
   
-  parser_t parser(opts);
+  parser_t parser();
   parser.compile(expression_string, expression);
 
   return expression.value();
@@ -44,8 +44,8 @@ void callFunction(Function function) {
           text = arg.substr(1, arg.size() - 2);
         } else {
           if (!variableMap.count(arg)) {
-            cout << calcExpression<int>(variableMap, arg);
-            //            cerr << "Variable '" << arg << "' NOT found." << "\n";
+            //cout << calcExpression<double>(variableMap, arg) << "\n";
+            cerr << "Variable '" << arg << "' NOT found." << "\n";
             continue;
           }
 

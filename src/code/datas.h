@@ -89,4 +89,10 @@ public:
     vector<DotCrop> files;
 };
 
+typedef struct {
+    string mainFile;
+    vector<string> files;
+    string addonPath;
+} ProjectConfig;
+
 #endif //CROP_DATA_H

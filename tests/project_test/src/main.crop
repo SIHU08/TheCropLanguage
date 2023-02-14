@@ -1,0 +1,7 @@
+import "sub.crop"
+
+void main() {
+    println("Amazing Crop!!")
+
+    subFunction()
+}

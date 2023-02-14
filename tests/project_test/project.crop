@@ -1,0 +1,5 @@
+mainFile("src/main.crop")
+addFile("src/sub.crop")
+// TODO : addSourceDirectory("src/") || source("src/")
+
+addon("addons/libaddon_interpret")
