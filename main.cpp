@@ -8,26 +8,34 @@
 
 using namespace std;
 
-int main(int argc, char **argv) {
-    string path = argv[1];
-
+string readFile(string path) {
     ifstream openFile(path.data());
-    string code;
+    string content;
     if (openFile.is_open()) {
         string line;
         while (getline(openFile, line)) {
-            code += line += "\n";
+            content += line += "\n";
         }
         openFile.close();
     }
+    return content;
+}
+
+int main(int argc, char **argv) {
+    string path = argv[1];
+    string code = readFile(path);
 
     ProjectConfig projectConfig = parseProjectConfig(code);
 
+    string dir = path.substr(0, path.find_last_of("/\\"));
+
     vector<DotCrop> sources;
-    for (string filePath : projectConfig.files) {
-        sources.push_back(parse(filePath));
+    for (const string& filePath: projectConfig.files) {
+        string content = readFile(dir + "/" + filePath);
+        cout << content << "\n";
+        sources.push_back(parse(content));
     }
-    CropProject project = CropProject(parse(projectConfig.mainFile), sources);
+    CropProject project = CropProject(parse(readFile(dir + "/" + projectConfig.mainFile)), sources);
 
     doCompile(project, projectConfig.addonPath);
 }

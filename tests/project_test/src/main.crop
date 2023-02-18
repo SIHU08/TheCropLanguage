@@ -1,4 +1,4 @@
-import "sub.crop"
+import("sub.crop")
 
 void main() {
     println("Amazing Crop!!")
