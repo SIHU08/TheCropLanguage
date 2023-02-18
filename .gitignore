@@ -5,6 +5,8 @@ build/
 CMakeFiles/
 .cache/
 .prettierrc
+.cmake/
+Testing/
 
 cmake_install.cmake
 CMakeCache.txt
@@ -12,6 +14,7 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 Makefile
 compile_commands.json
+crop.cbp
 
 libaddon_interpret.so
 cropc

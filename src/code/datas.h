@@ -8,15 +8,6 @@
 
 using namespace std;
 
-typedef struct {
-    vector<string> name;
-} Parameter;
-
-class Variable {
-    string name;
-    any value;
-};
-
 enum VariableType {
     VOID, INT, FLOAT, CHAR, BOOL, OBJECT
 };
@@ -32,6 +23,15 @@ public:
     VariableType type;
     string objName;
 };
+
+typedef struct {
+    vector<string> name;
+} Parameter;
+
+typedef struct {
+    Type type;
+    any value;
+} Variable;
 
 enum CodeType {
     EXECUTE_FUNCTION,

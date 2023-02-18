@@ -11,7 +11,7 @@
 #include "../code/datas.h"
 #include "../utils.h"
 
-regex funcReg(R"([A-Za-z]*\s\s*[A-Za-z][A-Za-z]*\s*\()");
+regex funcReg(R"([A-Za-z][A-Za-z]*\s\s*[A-Za-z][A-Za-z]*\s*\()");
 regex callFuncReg(R"([A-Za-z][A-Za-z]*\s*\(.*\))");
 regex createVariableReg(R"([A-Za-z][A-Za-z]*\s\s*[A-Za-z][A-Za-z]*\s*=\s*.*)");
 regex updateVariableReg(R"([A-Za-z][A-Za-z]*\s*=\s*.*)");

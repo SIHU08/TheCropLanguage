@@ -22,9 +22,9 @@ public:
   string objName;
 };
 
-class Parameter {
+typedef struct {
   vector<string> name;
-};
+} Parameter;
 
 typedef struct {
   Type type;
@@ -96,5 +96,11 @@ public:
   DotCrop mainFile;
   vector<DotCrop> files;
 };
+
+typedef struct {
+  string mainFile;
+  vector<string> files;
+  string addonPath;
+} ProjectConfig;
 
 #endif // CROP_DATA_H

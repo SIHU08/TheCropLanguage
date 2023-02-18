@@ -1,6 +1,8 @@
 #include <any>
 #include <iostream>
 #include <string>
+#include <regex>
+#include <vector>
 
 using namespace std;
 
@@ -15,4 +17,11 @@ string to_string(any value) {
     return any_cast<bool>(value) ? "true" : "false";
   }
   return "INVALID_VALUE";
+}
+
+vector<string> splitWithRegex(string s, const string& pattern = " ") {
+  regex re(pattern);
+  sregex_token_iterator it(s.begin(), s.end(), re, -1), end;
+  vector<string> answer(it, end);
+  return answer;
 }
