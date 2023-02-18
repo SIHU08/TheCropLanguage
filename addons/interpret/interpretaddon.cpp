@@ -114,6 +114,10 @@ void callFunction(const Function &function) {
           return;
         }
       }
+
+      if (isTrue) {
+        callFunction(Function(Type(), genRandomString(8), item.codeBlock));
+      }
     }
   }
 }

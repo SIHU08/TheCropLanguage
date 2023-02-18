@@ -20,9 +20,10 @@ any getVariableValue(Variable variable) {
   } else if (type == BOOL) {
     return any_cast<bool>(variable.value);
   } else if (type == OBJECT) {
-    cerr << "e guo sse nun sa ram da zuk er"
-         << "\n";
-    exit(1);
+    return any_cast<string>(variable.value);
+    //    cerr << "e guo sse nun sa ram da zuk er"
+//         << "\n";
+//    exit(1);
   } else {
     cerr << "WTF"
          << "\n";

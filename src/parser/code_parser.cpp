@@ -20,12 +20,12 @@ DotCrop parse(string body) {
   while (pointer < body.size()) {
     text += body[pointer];
 
-    if (regex_match(text, importReg)) {
+    if (regex_match(trim(text), importReg)) {
       vector<string> splitted = split(text, '(');
-      string argument = splitted[1].substr(1, splitted[1].size() - 2);
+      string argument = splitted[1].substr(1, splitted[1].size() - 3);
       imports.push_back(argument);
-      cout << argument << "\n";
-    } if (regex_match(text, funcReg)) {
+      text = "";
+    } if (regex_match(trim(text), funcReg)) {
       vector<string> splitted = split(text, ' ');
       Type returnType = getType(splitted[0]);
 
