@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define WHITESPACE " \n\r\t\f\v"
+
 string to_string(any value) {
   if (value.type() == typeid(int)) {
     return to_string(any_cast<int>(value));
@@ -37,4 +39,18 @@ string genRandomString(int len) {
     res += alphanum[rand() % (sizeof(alphanum) - 1)];
 
   return res;
+}
+
+string ltrim(const string &s) {
+    size_t start = s.find_first_not_of(WHITESPACE);
+    return (start == string::npos) ? "" : s.substr(start);
+}
+
+string rtrim(const string &s) {
+    size_t end = s.find_last_not_of(WHITESPACE);
+    return (end == string::npos) ? "" : s.substr(0, end + 1);
+}
+
+string trim(const string &s) {
+    return rtrim(ltrim(s));
 }

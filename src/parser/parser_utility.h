@@ -16,7 +16,7 @@ regex callFuncReg(R"([A-Za-z][A-Za-z]*\s*\(.*\))");
 regex createVariableReg(R"([A-Za-z][A-Za-z]*\s\s*[A-Za-z][A-Za-z]*\s*=\s*.*)");
 regex updateVariableReg(R"([A-Za-z][A-Za-z]*\s*=\s*.*)");
 regex importReg(R"(import\("[a-zA-Z-_][a-zA-Z-_]*.crop"\))");
-regex ifStatementReg(R"(if\s*\(.*\))");
+regex ifStatementReg(R"(if\s*\(.*\).*)");
 
 Type getType(string text) {
     if (text == "void")
@@ -44,7 +44,7 @@ any castValue(Type type, string v) {
         case CHAR:
             return v[1];
         case BOOL:
-            return v == "true" ? true : false;
+            return v == "true";
         case OBJECT:
             return nullptr; // TODO
     }
@@ -70,6 +70,7 @@ tuple<int, vector<Parameter>> parseParameter(string body, int pointer) {
 tuple<int, vector<Code>> parseCodeBlock(string body, int pointer) {
     vector<Code> codes;
 
+    int lastStartBracePointer = -1;
     string text;
     bool isStarted = false;
     while (pointer < body.size()) {
@@ -77,16 +78,36 @@ tuple<int, vector<Code>> parseCodeBlock(string body, int pointer) {
             if (body[pointer] == '}')
                 break;
 
+            if (body[pointer] == '{') lastStartBracePointer = pointer;
+
             if (body[pointer] != '\n')
                 text += body[pointer];
             else if (!text.empty()) {
                 text = trim(text);
 
-                if (regex_match(trim(text), ifStatementReg)) { // Update Variable
+                if (regex_match(trim(text), ifStatementReg)) { // if()
                     vector<string> splitted = split(text, '(');
-                    string statement = splitted[1].substr(0, splitted[1].size() - 1);
+                    string statement = split(splitted[1], ')')[0];
 
-                    Code code(statement, parseCodeBlock(body, pointer));
+                    vector<Code> ifCodeBlock, elseCodeBlock;
+                    tie(pointer, ifCodeBlock) = parseCodeBlock(body, lastStartBracePointer);
+                    int tempPointer = pointer + 1;
+                    bool hasElse = false;
+
+                    string tempText;
+                    while (tempPointer < body.size()) {
+                        tempText += body[tempPointer];
+                        if (trim(tempText).size() == 4) {
+                            if (trim(tempText) == "else") hasElse = true;
+
+                            break;
+                        }
+                        tempPointer++;
+                    }
+                    pointer = tempPointer;
+                    tie(pointer, elseCodeBlock) = parseCodeBlock(body, pointer);
+
+                    Code code(statement, ifCodeBlock, elseCodeBlock);
                     codes.emplace_back(code);
                 } else if (regex_match(trim(text), callFuncReg)) { // Call Function
                     vector<string> splitted = split(text, '(');

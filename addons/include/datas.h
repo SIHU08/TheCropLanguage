@@ -8,7 +8,9 @@
 
 using namespace std;
 
-enum VariableType { VOID, INT, FLOAT, CHAR, BOOL, OBJECT };
+enum VariableType {
+    VOID, INT, FLOAT, CHAR, BOOL, OBJECT
+};
 
 class Type {
 public:
@@ -20,6 +22,14 @@ public:
 
     VariableType type;
     string objName;
+
+    bool operator==(const Type &other) const {
+        return type == other.type;
+    }
+
+    bool operator!=(const Type &other) const {
+        return type != other.type;
+    }
 };
 
 typedef struct {
@@ -59,8 +69,9 @@ public:
         type = UPDATE_VARIABLE;
     }
 
-    Code(string statement, vector<Code> codeBlock)
-            : statement(std::move(statement)), codeBlock(std::move(codeBlock)) {
+    Code(const string &statement, const vector<Code> &ifCodeBlock, const vector<Code> &elseCodeBlock = vector<Code>())
+            : statement(
+            statement), ifCodeBlock(ifCodeBlock), elseCodeBlock(elseCodeBlock) {
         type = IF_STATEMENT;
     }
 
@@ -71,7 +82,8 @@ public:
     string variableName;
     any variableData;
     string statement;
-    vector<Code> codeBlock;
+    vector<Code> ifCodeBlock;
+    vector<Code> elseCodeBlock;
 };
 
 class Function {
