@@ -11,14 +11,14 @@
 #include "parser_utility.h"
 
 DotCrop parse(string body) {
-  vector<string> imports;
-  vector<Function> functions;
-  int pointer = 0;
+    vector<string> imports;
+    vector<Function> functions;
+    int pointer = 0;
 
-  string text;
+    string text;
 
-  while (pointer < body.size()) {
-    text += body[pointer];
+    while (pointer < body.size()) {
+        text += body[pointer];
 
     if (regex_match(trim(text), importReg)) {
       vector<string> splitted = split(text, '(');
@@ -29,22 +29,22 @@ DotCrop parse(string body) {
       vector<string> splitted = split(text, ' ');
       Type returnType = getType(splitted[0]);
 
-      string functionName = splitted[1].substr(0, splitted[1].size() - 1);
+            string functionName = splitted[1].substr(0, splitted[1].size() - 1);
 
-      vector<Parameter> parameters;
-      tie(pointer, parameters) = parseParameter(body, pointer);
+            vector<Parameter> parameters;
+            tie(pointer, parameters) = parseParameter(body, pointer);
 
-      vector<Code> codeBlock;
-      tie(pointer, codeBlock) = parseCodeBlock(body, pointer);
+            vector<Code> codeBlock;
+            tie(pointer, codeBlock) = parseCodeBlock(body, pointer);
 
-      text = "";
+            text = "";
 
-      Function func = Function(returnType, functionName, codeBlock);
-      functions.emplace_back(func);
+            Function func = Function(returnType, functionName, codeBlock);
+            functions.emplace_back(func);
+        }
+
+        pointer++;
     }
 
-    pointer++;
-  }
-
-  return DotCrop("test", imports, functions);
+    return DotCrop("test", imports, functions);
 }
