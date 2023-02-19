@@ -50,8 +50,7 @@ Variable getVariableOrTemporaryVariable(string value,
     } else if (value == "true" || value == "false") { // is bool
         return {Type(INT), value == "true"};
     } else {
-        // ERROR
-        cerr << "ERROR in 'getVariableOrTemporaryVariable'"
-             << "\n";
+        cerr << "Variable " << value << " NOT found.";
+        exit(1);
     }
 }
