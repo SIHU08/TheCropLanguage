@@ -20,16 +20,14 @@ DotCrop parse(string body) {
     while (pointer < body.size()) {
         text += body[pointer];
 
-        if (regex_match(text, importReg)) {
-            vector<string> splitted = split(text, '(');
-            string argument = splitted[1].substr(1, splitted[1].size() - 3);
-            imports.push_back(argument);
-            cout << argument << "\n";
-            text = "";
-        }
-        if (regex_match(text, funcReg)) {
-            vector<string> splitted = split(text, ' ');
-            Type returnType = getType(splitted[0]);
+    if (regex_match(trim(text), importReg)) {
+      vector<string> splitted = split(text, '(');
+      string argument = splitted[1].substr(1, splitted[1].size() - 3);
+      imports.push_back(argument);
+      text = "";
+    } if (regex_match(trim(text), funcReg)) {
+      vector<string> splitted = split(text, ' ');
+      Type returnType = getType(splitted[0]);
 
             string functionName = splitted[1].substr(0, splitted[1].size() - 1);
 

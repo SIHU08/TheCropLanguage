@@ -1,21 +1,12 @@
 #ifndef CROP_DATA_H
 #define CROP_DATA_H
 
+#include <any>
 #include <string>
 #include <utility>
 #include <vector>
-#include <any>
 
 using namespace std;
-
-typedef struct {
-    vector<string> name;
-} Parameter;
-
-class Variable {
-    string name;
-    any value;
-};
 
 enum VariableType {
     VOID, INT, FLOAT, CHAR, BOOL, OBJECT
@@ -31,27 +22,58 @@ public:
 
     VariableType type;
     string objName;
+
+    bool operator==(const Type &other) const {
+        return type == other.type;
+    }
+
+    bool operator!=(const Type &other) const {
+        return type != other.type;
+    }
 };
+
+typedef struct {
+    vector<string> name;
+} Parameter;
+
+typedef struct {
+    Type type;
+    any value;
+} Variable;
 
 enum CodeType {
     EXECUTE_FUNCTION,
     CREATE_VARIABLE,
     UPDATE_VARIABLE,
+    IF_STATEMENT,
 };
 
 class Code {
 public:
-    Code(string functionName, const vector<any> &functionArguments) : functionName(std::move(functionName)),
-                                                                      functionArguments(
-                                                                              functionArguments) { type = EXECUTE_FUNCTION; }
+    Code(string functionName, const vector<any> &functionArguments)
+            : functionName(std::move(functionName)),
+              functionArguments(functionArguments) {
+        type = EXECUTE_FUNCTION;
+    }
 
-    Code(Type variableType, string variableName, any variableData) : variableType(std::move(variableType)),
-                                                                     variableName(std::move(variableName)),
-                                                                     variableData(std::move(
-                                                                             variableData)) { type = CREATE_VARIABLE; }
+    Code(Type variableType, string variableName, any variableData)
+            : variableType(std::move(variableType)),
+              variableName(std::move(variableName)),
+              variableData(std::move(variableData)) {
+        type = CREATE_VARIABLE;
+    }
 
-    Code(string variableName, any variableData) : variableName(std::move(variableName)),
-                                                                variableData(std::move(variableData)) { type = UPDATE_VARIABLE; }
+    Code(string variableName, any variableData)
+            : variableName(std::move(variableName)),
+              variableData(std::move(variableData)) {
+        type = UPDATE_VARIABLE;
+    }
+
+    Code(const string &statement, const vector<Code> &ifCodeBlock, const vector<Code> &elseCodeBlock = vector<Code>())
+            : statement(
+            statement), ifCodeBlock(ifCodeBlock), elseCodeBlock(elseCodeBlock) {
+        type = IF_STATEMENT;
+    }
 
     CodeType type;
     string functionName;
@@ -59,12 +81,16 @@ public:
     Type variableType;
     string variableName;
     any variableData;
+    string statement;
+    vector<Code> ifCodeBlock;
+    vector<Code> elseCodeBlock;
 };
 
 class Function {
 public:
-    Function(Type returnType, string name, const vector<Code> &codes) : returnType(std::move(returnType)),
-                                                                        name(std::move(name)), codes(codes) {}
+    Function(Type returnType, string name, const vector<Code> &codes)
+            : returnType(std::move(returnType)), name(std::move(name)), codes(codes) {
+    }
 
     Type returnType;
     string name;
@@ -73,8 +99,9 @@ public:
 
 class DotCrop {
 public:
-    DotCrop(string aPackage, const vector<string> &imports, const vector<Function> &functions) : package(std::move(
-            aPackage)), imports(imports), functions(functions) {}
+    DotCrop(string aPackage, const vector<string> &imports,
+            const vector<Function> &functions)
+            : package(std::move(aPackage)), imports(imports), functions(functions) {}
 
     string package;
     vector<string> imports;
@@ -83,7 +110,8 @@ public:
 
 class CropProject {
 public:
-    CropProject(DotCrop mainFile, const vector<DotCrop> &files) : mainFile(std::move(mainFile)), files(files) {}
+    CropProject(DotCrop mainFile, const vector<DotCrop> &files)
+            : mainFile(std::move(mainFile)), files(files) {}
 
     DotCrop mainFile;
     vector<DotCrop> files;
@@ -95,4 +123,4 @@ typedef struct {
     string addonPath;
 } ProjectConfig;
 
-#endif //CROP_DATA_H
+#endif // CROP_DATA_H

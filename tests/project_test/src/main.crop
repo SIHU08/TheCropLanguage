@@ -3,5 +3,11 @@ import("sub.crop")
 void main() {
     println("Amazing Crop!!")
 
+    int a = 1
+    if (a == 2) {
+        println("is True!!")
+    } else {
+        println("is False!!")
+    }
     subFunction()
 }
