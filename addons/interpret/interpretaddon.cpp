@@ -50,6 +50,37 @@ void callFunction(const Function &function) {
                 string text = to_string(
                         getVariableValue(getVariableOrTemporaryVariable(arg, variableMap)));
                 cout << text << "\n";
+                continue;
+            }
+
+            Function *subFunction = nullptr;
+            DotCrop file = *item.parent->parent;
+            for (Function func: file.functions) {
+                if (func.name == item.functionName) {
+                    subFunction = &func;
+                    break;
+                }
+            }
+
+            if (subFunction == nullptr) {
+                for (DotCrop other: file.parent->files) {
+                    if (!file.isImported(other)) continue;
+                    for (Function func: other.functions) {
+                        if (func.name != item.functionName) continue;
+
+                        subFunction = &func;
+                        break;
+                    }
+
+                    if (subFunction != nullptr) break;
+                }
+            }
+
+            if (subFunction != nullptr) { // FIXME "subFunction -> codes => type" is garbage value
+                callFunction(*subFunction);
+            } else {
+                cerr << "Function " << item.functionName << " NOT found";
+                return;
             }
         } else if (item.type == CREATE_VARIABLE) {
             variableMap[item.variableName] =

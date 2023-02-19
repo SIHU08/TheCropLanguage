@@ -41,13 +41,17 @@ typedef struct {
     any value;
 } Variable;
 
-enum CodeType {
-    EXECUTE_FUNCTION,
-    CREATE_VARIABLE,
-    UPDATE_VARIABLE,
-    IF_STATEMENT,
-};
 
+class Function;
+
+class DotCrop;
+
+class CropProject;
+
+#define EXECUTE_FUNCTION 0
+#define CREATE_VARIABLE 1
+#define UPDATE_VARIABLE 2
+#define IF_STATEMENT 3
 class Code {
 public:
     Code(string functionName, const vector<any> &functionArguments)
@@ -75,7 +79,8 @@ public:
         type = IF_STATEMENT;
     }
 
-    CodeType type;
+    Function *parent = nullptr;
+    int type;
     string functionName;
     vector<any> functionArguments;
     Type variableType;
@@ -95,17 +100,29 @@ public:
     Type returnType;
     string name;
     vector<Code> codes;
+    DotCrop *parent = nullptr;
 };
 
 class DotCrop {
 public:
-    DotCrop(string aPackage, const vector<string> &imports,
-            const vector<Function> &functions)
-            : package(std::move(aPackage)), imports(imports), functions(functions) {}
+    DotCrop(const string &name, const vector<string> &imports, const vector<Function> &functions) : name(name),
+                                                                                                    imports(imports),
+                                                                                                    functions(
+                                                                                                            functions) {}
 
-    string package;
+    string name;
     vector<string> imports;
     vector<Function> functions;
+    CropProject *parent = nullptr;
+
+    bool isImported(DotCrop other) {
+        for (string importStr: imports) {
+            if (importStr == other.name) {
+                return true;
+            }
+        }
+        return false;
+    }
 };
 
 class CropProject {

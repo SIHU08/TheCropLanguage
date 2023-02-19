@@ -31,11 +31,15 @@ int main(int argc, char **argv) {
 
     vector<DotCrop> sources;
     for (const string& filePath: projectConfig.files) {
-        string content = readFile(dir + "/" + filePath);
-        cout << content << "\n";
-        sources.push_back(parse(content));
+        string content = readFile(dir + "/src/" + filePath);
+        sources.push_back(parse(filePath, content));
     }
-    CropProject project = CropProject(parse(readFile(dir + "/" + projectConfig.mainFile)), sources);
+    CropProject project = CropProject(parse(projectConfig.mainFile, readFile(dir + "/src/" + projectConfig.mainFile)), sources);
+
+    for (DotCrop file : project.files) {
+        file.parent = &project;
+    }
+    project.mainFile.parent = &project;
 
     doCompile(project, projectConfig.addonPath);
 }

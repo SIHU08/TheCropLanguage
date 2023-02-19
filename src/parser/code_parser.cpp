@@ -10,7 +10,7 @@
 #include "../utils.h"
 #include "parser_utility.h"
 
-DotCrop parse(string body) {
+DotCrop parse(string name, string body) {
     vector<string> imports;
     vector<Function> functions;
     int pointer = 0;
@@ -20,14 +20,15 @@ DotCrop parse(string body) {
     while (pointer < body.size()) {
         text += body[pointer];
 
-    if (regex_match(trim(text), importReg)) {
-      vector<string> splitted = split(text, '(');
-      string argument = splitted[1].substr(1, splitted[1].size() - 3);
-      imports.push_back(argument);
-      text = "";
-    } if (regex_match(trim(text), funcReg)) {
-      vector<string> splitted = split(text, ' ');
-      Type returnType = getType(splitted[0]);
+        if (regex_match(trim(text), importReg)) {
+            vector<string> splitted = split(text, '(');
+            string argument = splitted[1].substr(1, splitted[1].size() - 3);
+            imports.push_back(argument);
+            text = "";
+        }
+        if (regex_match(trim(text), funcReg)) {
+            vector<string> splitted = split(text, ' ');
+            Type returnType = getType(splitted[0]);
 
             string functionName = splitted[1].substr(0, splitted[1].size() - 1);
 
@@ -40,11 +41,20 @@ DotCrop parse(string body) {
             text = "";
 
             Function func = Function(returnType, functionName, codeBlock);
+            for (int i = 0; i < func.codes.size(); ++i) {
+                func.codes[i].parent = &func;
+            }
             functions.emplace_back(func);
         }
 
         pointer++;
     }
 
-    return DotCrop("test", imports, functions);
+    DotCrop file = DotCrop(name, imports, functions);
+
+    for (Function func: file.functions) {
+        func.parent = &file;
+    }
+
+    return file;
 }
